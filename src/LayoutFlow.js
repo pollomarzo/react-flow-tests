@@ -17,9 +17,10 @@ dagreGraph.setDefaultEdgeLabel(() => ({}));
 const nodeWidth = 172;
 const nodeHeight = 36;
 
-const getLayoutedElements = (elements, direction = 'TB') => {
-  const isHorizontal = direction === 'LR';
-  dagreGraph.setGraph({ rankdir: direction });
+const getLayoutedElements = elements => {
+  const isHorizontal = true;
+  // always use same layout
+  dagreGraph.setGraph({ rankdir: 'LR' });
 
   elements.forEach(el => {
     if (isNode(el)) {
@@ -50,10 +51,11 @@ const getLayoutedElements = (elements, direction = 'TB') => {
   });
 };
 
-const LayoutFlow = (initialElements, onConnect, onElementsRemove) => {
+const LayoutFlow = ({ initialElements, onConnect, onElementsRemove }) => {
+  console.log(initialElements);
   const layoutedElements = getLayoutedElements(initialElements);
   const [elements, setElements] = useState(layoutedElements);
-  
+
   const onLayout = useCallback(
     direction => {
       const layoutedElements = getLayoutedElements(elements, direction);
@@ -63,7 +65,7 @@ const LayoutFlow = (initialElements, onConnect, onElementsRemove) => {
   );
 
   return (
-    <div className="layoutflow">
+    <div className="layoutflow" style={{ height: 700, width: 1000 }}>
       <ReactFlowProvider>
         <ReactFlow
           elements={elements}
@@ -71,10 +73,6 @@ const LayoutFlow = (initialElements, onConnect, onElementsRemove) => {
           onElementsRemove={onElementsRemove}
           connectionLineType="smoothstep"
         />
-        <div className="controls">
-          <button onClick={() => onLayout('TB')}>vertical layout</button>
-          <button onClick={() => onLayout('LR')}>horizontal layout</button>
-        </div>
       </ReactFlowProvider>
     </div>
   );

@@ -33,6 +33,24 @@ export default function App() {
     position: { x: 0, y: 0 }
   }));
 
+  const initialNode = {
+    id: -1,
+    data: { label: 'starting subject' },
+    dataTopic: 'none',
+    position: { x: 0, y: 0 }
+  };
+
+  var edges = nodes.map(node => ({
+    id: `start-${node.id}`,
+    source: initialNode.id,
+    target: node.id,
+    type: 'smoothstep',
+    animated: true
+  }));
+
+  // add initial node and edges
+  const elements = [...nodes, initialNode, ...edges];
+
   const onConnect = params =>
     setElements(els =>
       addEdge({ ...params, type: 'smoothstep', animated: true }, els)
@@ -43,9 +61,12 @@ export default function App() {
   return (
     <div>
       <h1>Hello!</h1>
-      <div style={{ height: 300 }}>
-        <LayoutFlow initialElements={nodes} 
-        onConnect onElementsRemove />
+      <div style={{ height: 700, width: 1000 }}>
+        <LayoutFlow
+          initialElements={elements}
+          onConnect={onConnect}
+          onElementsRemove={onElementsRemove}
+        />
       </div>
     </div>
   );
